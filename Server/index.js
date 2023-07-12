@@ -47,9 +47,9 @@ mongoose
     // checkDailayDb();
     // setInterval(checkDailayDb, time);
     checkDailayDb();
-    cron.schedule("00 00 * * *", () => {
-      checkDailayDb();
-    });
+    // cron.schedule("00 00 * * *", () => {
+    //   checkDailayDb();
+    // });
   })
   .catch((error) => {
     message = { subject: "file: index.js:49", message: error.message };
