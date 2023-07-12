@@ -46,7 +46,7 @@ mongoose
     app.listen(PORT, () => console.log("Server is running on port %d", PORT));
     // checkDailayDb();
     // setInterval(checkDailayDb, time);
-    // checkDailayDb();
+    checkDailayDb();
     cron.schedule("00 00 * * *", () => {
       checkDailayDb();
     });
