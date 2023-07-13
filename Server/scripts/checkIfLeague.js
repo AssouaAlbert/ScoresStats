@@ -1,6 +1,28 @@
+const puppeteer = require("puppeteer");
 const getGamesData = require("./getGamesData");
 
-const checkIfLeague = async (page, gamesList) => {
+const checkIfLeague = async ( gamesList) => {
+
+  const browser = await puppeteer.launch({
+    headless: true,
+    dumpio: false,
+    args: [
+      "--no-sandbox",
+      "---disable-setuid-sandbox",
+      "--single-process",
+      "--no-zygote",
+    ],
+    executablePath:
+      process.env.NODE_ENV === "production"
+        ? process.env.PUPPETEER_EXECUTABLE_PATH
+        : puppeteer.executablePath(),
+  });
+  const page = await browser.newPage();
+  await page.setViewport({
+    width: 1200,
+    height: 800,
+  });
+
   const gamesListArray = Object.entries(gamesList);
   for (let i = 0; i < gamesListArray.length; i++) {
     const [key, value] = gamesListArray[i];
@@ -30,7 +52,8 @@ const checkIfLeague = async (page, gamesList) => {
     );
     gamesList[key] = results;
   }
-  return gamesList = await getGamesData(page, gamesList);
+  browser.close();
+  return gamesList = await getGamesData(gamesList);
 };
 
 module.exports = checkIfLeague;

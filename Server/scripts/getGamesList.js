@@ -37,8 +37,8 @@ const getGamesList = async () => {
     width: 1200,
     height: 800,
   });
-  gamesList = await checkIfLeague(newPage, gamesList);
   browser.close();
+  gamesList = await checkIfLeague(gamesList);
   return gamesList;
 };
 

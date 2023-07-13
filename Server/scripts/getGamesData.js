@@ -1,5 +1,25 @@
+const puppeteer = require("puppeteer");
 const getH2HStats = require("./getH2HStats");
-const getGamesData = async (page, gamesList) => {
+const getGamesData = async (gamesList) => {
+  const browser = await puppeteer.launch({
+    headless: true,
+    dumpio: false,
+    args: [
+      "--no-sandbox",
+      "---disable-setuid-sandbox",
+      "--single-process",
+      "--no-zygote",
+    ],
+    executablePath:
+      process.env.NODE_ENV === "production"
+        ? process.env.PUPPETEER_EXECUTABLE_PATH
+        : puppeteer.executablePath(),
+  });
+  const page = await browser.newPage();
+  await page.setViewport({
+    width: 1200,
+    height: 800,
+  });
   const gamesListArray = Object.entries(gamesList);
   for (let i = 0; i < gamesListArray.length; i++) {
     const [key, value] = gamesListArray[i];
@@ -124,7 +144,8 @@ const getGamesData = async (page, gamesList) => {
       gamesList[key] = results;
     }
   }
+  browser.close();
   // Calculate Differences in games
-  return gamesList = await getH2HStats(page, gamesList);
+  return (gamesList = await getH2HStats(gamesList));
 };
 module.exports = getGamesData;
