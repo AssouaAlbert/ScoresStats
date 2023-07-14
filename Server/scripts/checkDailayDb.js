@@ -10,7 +10,7 @@ const deleteOldFiles = require("./deleteOldFiles")
 const date = require("./getDate");
 const fileName = `_${date}`;
 const filePath = path.resolve(__dirname, `../data/${fileName}.json`);
-const time = 30 * 60 * 1000;
+const time =  * 60 * 1000;
 let start = 0;
 let  gamesList = {};
 

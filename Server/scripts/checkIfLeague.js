@@ -88,7 +88,7 @@ const checkIfLeague = async (gamesList, start = 0) => {
   } catch (error) {
     message = { subject: "file: checkIfLeague.js", message: error.message };
     mail(message);
-    setTimeout(() => checkIfLeague(gamesList, start), time);
+    // setTimeout(() => checkIfLeague(gamesList, start), time);
   }
 };
 
