@@ -150,8 +150,8 @@ console.log("🚀 ~ file: getGamesData.js:161 ~ getGamesData ~ getGamesData:")
       }
     }
     browser.close();
-    message = { subject: "Progress", message: "file: getGamesData.js" };
-    mail(message);
+    // message = { subject: "Progress", message: "file: getGamesData.js" };
+    // mail(message);
     // Calculate Differences in games
     return (gamesList = await getH2HStats(gamesList));
   } catch (error) {

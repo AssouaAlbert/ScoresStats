@@ -42,8 +42,8 @@ console.log("🚀 ~ file: getGamesList.js:54 ~ getGamesList ~ getGamesList:")
       height: 800,
     });
     browser.close();
-    message = { subject: "Progress", message: "file: getGamesList.js" };
-    mail(message);
+    // message = { subject: "Progress", message: "file: getGamesList.js" };
+    // mail(message);
     gamesList = await checkIfLeague(gamesList);
     return gamesList;
   } catch (error) {

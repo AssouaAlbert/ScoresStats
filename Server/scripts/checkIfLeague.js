@@ -75,8 +75,8 @@ console.log("🚀 ~ file: checkIfLeague.js:87 ~ checkIfLeague ~ checkIfLeague:")
       );
       gamesList[key] = results;
     }
-    message = { subject: "Progress", message: "file: checkIfLeague.js" };
-    mail(message);
+    // message = { subject: "Progress", message: "file: checkIfLeague.js" };
+    // mail(message);
     browser.close();
     return (gamesList = await getGamesData(gamesList));
   } catch (error) {
