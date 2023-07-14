@@ -1,4 +1,5 @@
 const DailyStats = require("../models/dailyStats");
+const mail = require("../scripts/sendEmail");
 const getGamesList = async (req, res) => {
   try {
     const gamesList = await DailyStats.find({league: true});

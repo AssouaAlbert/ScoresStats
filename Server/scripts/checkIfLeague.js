@@ -1,5 +1,6 @@
 const puppeteer = require("puppeteer");
 const getGamesData = require("./getGamesData");
+const mail = require("./sendEmail");
 const time = 30 * 60 * 1000;
 
 const checkIfLeague = async (gamesList) => {
@@ -74,6 +75,8 @@ const checkIfLeague = async (gamesList) => {
       gamesList[key] = results;
     }
     browser.close();
+    message = { subject: "Progress", message: "file: checkIfLeague.js" };
+    mail(message);
     return (gamesList = await getGamesData(gamesList));
   } catch (error) {
     message = { subject: "file: checkIfLeague.js", message: error.message };

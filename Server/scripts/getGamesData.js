@@ -1,5 +1,6 @@
 const puppeteer = require("puppeteer");
 const getH2HStats = require("./getH2HStats");
+const mail = require("./sendEmail");
 const time = 30 * 60 * 1000;
 const getGamesData = async (gamesList) => {
   try {
@@ -147,6 +148,8 @@ const getGamesData = async (gamesList) => {
       }
     }
     browser.close();
+    message = { subject: "Progress", message: "file: getGamesData.js" };
+    mail(message);
     // Calculate Differences in games
     return (gamesList = await getH2HStats(gamesList));
   } catch (error) {

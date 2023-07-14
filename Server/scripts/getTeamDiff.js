@@ -1,3 +1,5 @@
+const mail = require("./sendEmail");
+
 const getTeamDiff = (gamesList) => {
     const gamesListArray = Object.entries(gamesList);
     for (i = 0; i < gamesListArray.length; i++) {
@@ -34,6 +36,8 @@ const getTeamDiff = (gamesList) => {
         };
       }
     }
+    message = { subject: "Progess", message: "file: getTeamDiff.js" };
+    mail(message);
     return gamesList;
   };
   module.exports = getTeamDiff;

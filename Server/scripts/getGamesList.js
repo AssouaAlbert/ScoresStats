@@ -1,6 +1,7 @@
 const puppeteer = require("puppeteer");
 const scrollPageGetLinks = require("./scrollPageGetLinks.js");
 const checkIfLeague = require("./checkIfLeague.js");
+const mail = require("./sendEmail");
 const time = 30 * 60 * 1000;
 
 require("dotenv").config();
@@ -41,6 +42,8 @@ const getGamesList = async () => {
     });
     browser.close();
     gamesList = await checkIfLeague(gamesList);
+    message = { subject: "Progress", message: "file: getGamesList.js" };
+    mail(message);
     return gamesList;
   } catch (error) {
     message = { subject: "file: getGamesList.js", message: error.message };

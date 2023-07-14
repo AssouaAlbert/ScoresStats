@@ -7,7 +7,6 @@ const dotenv = require("dotenv");
 const helmet = require("helmet");
 const morgan = require("morgan");
 const cron = require("node-cron");
-const fs = require("fs");
 
 /* SCRIPTS */
 const checkDailayDb = require("./scripts/checkDailayDb");
