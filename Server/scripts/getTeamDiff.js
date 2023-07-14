@@ -1,6 +1,7 @@
 const mail = require("./sendEmail");
 
 const getTeamDiff = (gamesList) => {
+    console.log("🚀 ~ file: getTeamDiff.js:4 ~ getTeamDiff ~ getTeamDiff:")
     const gamesListArray = Object.entries(gamesList);
     for (i = 0; i < gamesListArray.length; i++) {
       const [key, value] = gamesListArray[i];

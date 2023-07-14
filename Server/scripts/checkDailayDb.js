@@ -13,6 +13,7 @@ const filePath = path.resolve(__dirname, `../data/${fileName}.json`);
 const time = 30 * 60 * 1000;
 
 const checkDailayDb = async () => {
+console.log("🚀 ~ file: checkDailayDb.js:74 ~ checkDailayDb ~ checkDailayDb:")
   deleteOldFiles();
   try {
     const db = await mongoose.connection.db;

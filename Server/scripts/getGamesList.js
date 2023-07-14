@@ -7,6 +7,7 @@ const time = 30 * 60 * 1000;
 require("dotenv").config();
 
 const getGamesList = async () => {
+console.log("🚀 ~ file: getGamesList.js:54 ~ getGamesList ~ getGamesList:")
   try {
     const browser = await puppeteer.launch({
       headless: true,
@@ -41,9 +42,9 @@ const getGamesList = async () => {
       height: 800,
     });
     browser.close();
-    gamesList = await checkIfLeague(gamesList);
     message = { subject: "Progress", message: "file: getGamesList.js" };
     mail(message);
+    gamesList = await checkIfLeague(gamesList);
     return gamesList;
   } catch (error) {
     message = { subject: "file: getGamesList.js", message: error.message };

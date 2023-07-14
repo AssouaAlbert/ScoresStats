@@ -3,6 +3,8 @@ const getH2HStats = require("./getH2HStats");
 const mail = require("./sendEmail");
 const time = 30 * 60 * 1000;
 const getGamesData = async (gamesList) => {
+console.log("🚀 ~ file: getGamesData.js:161 ~ getGamesData ~ getGamesData:")
+
   try {
     const browser = await puppeteer.launch({
       headless: true,
