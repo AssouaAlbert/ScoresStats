@@ -74,6 +74,7 @@ console.log("🚀 ~ file: checkIfLeague.js:87 ~ checkIfLeague ~ checkIfLeague:")
         [key, gamesList]
       );
       gamesList[key] = results;
+      console.log("🚀 ~ file: checkIfLeague.js:77 ~ checkIfLeague ~ results:", results)
     }
     // message = { subject: "Progress", message: "file: checkIfLeague.js" };
     // mail(message);
