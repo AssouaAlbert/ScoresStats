@@ -27,55 +27,60 @@ console.log("🚀 ~ file: checkIfLeague.js:87 ~ checkIfLeague ~ checkIfLeague:")
     });
 
     const gamesListArray = Object.entries(gamesList);
-    for (let i = 0; i < gamesListArray.length; i++) {
-      const [key, value] = gamesListArray[i];
-      console.log("🚀 ~ file: checkIfLeague.js:34 ~ checkIfLeague ~ `${value.link}`:", value.link)
-      await page.goto(`${value.link}`, {
-        waitUntil: "domcontentloaded",
-      });
-      let results = await page.evaluate(
-        async ([key, gamesList]) => {
-          return await new Promise((res, rej) => {
-            const table = document.getElementById("table");
-            const country = document.getElementById(
-              "category-header__category"
-            ).textContent;
-            const stage = document.getElementById(
-              "category-header__stage"
-            ).textContent;
-            if (table) {
-              res(
-                (gamesList[key] = {
-                  ...gamesList[key],
-                  league: true,
-                  country,
-                  stage,
-                })
-              );
-            } else {
-              const homeName = document.getElementById(
-                "match-detail_team-name_home-link"
-              ).lastChild?.textContent;
-              const awayName = document.getElementById(
-                "match-detail_team-name_away-link"
-              ).lastChild?.textContent;
-              res(
-                (gamesList[key] = {
-                  ...gamesList[key],
-                  league: false,
-                  stage,
-                  country,
-                  home: { title: homeName },
-                  away: { title: awayName },
-                })
-              );
-            }
-          });
-        },
-        [key, gamesList]
-      );
-      gamesList[key] = results;
+    let ceil = Math.ceil(gamesListArray.length/10) * 10;
+    for (let index = 0; index < ceil; index+=10) {
+      for (let i = index; i < index+10; i++) {
+        if (!gamesListArray[i]) break;
+        const [key, value] = gamesListArray[i];
+        console.log("🚀 ~ file: checkIfLeague.js:34 ~ checkIfLeague ~ `${value.link}`:", value.link)
+        await page.goto(`${value.link}`, {
+          waitUntil: "domcontentloaded",
+        });
+        let results = await page.evaluate(
+          async ([key, gamesList]) => {
+            return await new Promise((res, rej) => {
+              const table = document.getElementById("table");
+              const country = document.getElementById(
+                "category-header__category"
+              ).textContent;
+              const stage = document.getElementById(
+                "category-header__stage"
+              ).textContent;
+              if (table) {
+                res(
+                  (gamesList[key] = {
+                    ...gamesList[key],
+                    league: true,
+                    country,
+                    stage,
+                  })
+                );
+              } else {
+                const homeName = document.getElementById(
+                  "match-detail_team-name_home-link"
+                ).lastChild?.textContent;
+                const awayName = document.getElementById(
+                  "match-detail_team-name_away-link"
+                ).lastChild?.textContent;
+                res(
+                  (gamesList[key] = {
+                    ...gamesList[key],
+                    league: false,
+                    stage,
+                    country,
+                    home: { title: homeName },
+                    away: { title: awayName },
+                  })
+                );
+              }
+            });
+          },
+          [key, gamesList]
+        );
+        gamesList[key] = results;
+      }
     }
+
     // message = { subject: "Progress", message: "file: checkIfLeague.js" };
     // mail(message);
     browser.close();
