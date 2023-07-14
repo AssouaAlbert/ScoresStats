@@ -29,6 +29,7 @@ console.log("🚀 ~ file: checkIfLeague.js:87 ~ checkIfLeague ~ checkIfLeague:")
     const gamesListArray = Object.entries(gamesList);
     for (let i = 0; i < gamesListArray.length; i++) {
       const [key, value] = gamesListArray[i];
+      console.log("🚀 ~ file: checkIfLeague.js:34 ~ checkIfLeague ~ `${value.link}`:", value.link)
       await page.goto(`${value.link}`, {
         waitUntil: "domcontentloaded",
       });
@@ -74,7 +75,6 @@ console.log("🚀 ~ file: checkIfLeague.js:87 ~ checkIfLeague ~ checkIfLeague:")
         [key, gamesList]
       );
       gamesList[key] = results;
-      console.log("🚀 ~ file: checkIfLeague.js:77 ~ checkIfLeague ~ results:", results)
     }
     // message = { subject: "Progress", message: "file: checkIfLeague.js" };
     // mail(message);
