@@ -4,7 +4,9 @@ const mail = require("./sendEmail");
 const time = 30 * 60 * 1000;
 
 const checkIfLeague = async (gamesList) => {
-console.log("🚀 ~ file: checkIfLeague.js:87 ~ checkIfLeague ~ checkIfLeague:")
+  console.log(
+    "🚀 ~ file: checkIfLeague.js:87 ~ checkIfLeague ~ checkIfLeague:"
+  );
   try {
     const browser = await puppeteer.launch({
       headless: true,
@@ -27,12 +29,23 @@ console.log("🚀 ~ file: checkIfLeague.js:87 ~ checkIfLeague ~ checkIfLeague:")
     });
 
     const gamesListArray = Object.entries(gamesList);
-    let ceil = Math.ceil(gamesListArray.length/10) * 10;
-    for (let index = 0; index < ceil; index+=10) {
-      for (let i = index; i < index+10; i++) {
-        if (!gamesListArray[i]) break;
+    let ceil = Math.ceil(gamesListArray.length / 10) * 10;
+    for (let index = 0; index < ceil; index += 10) {
+      const page = await browser.newPage();
+      await page.setViewport({
+        width: 1200,
+        height: 800,
+      });
+      for (let i = index; i < index + 10; i++) {
+        if (!gamesListArray[i]) {
+          page.close();
+          break;
+        }
         const [key, value] = gamesListArray[i];
-        console.log("🚀 ~ file: checkIfLeague.js:34 ~ checkIfLeague ~ `${value.link}`:", value.link)
+        console.log(
+          "🚀 ~ file: checkIfLeague.js:34 ~ checkIfLeague ~ `${value.link}`:",
+          value.link
+        );
         await page.goto(`${value.link}`, {
           waitUntil: "domcontentloaded",
         });
@@ -78,6 +91,7 @@ console.log("🚀 ~ file: checkIfLeague.js:87 ~ checkIfLeague ~ checkIfLeague:")
           [key, gamesList]
         );
         gamesList[key] = results;
+        page.close()
       }
     }
 
