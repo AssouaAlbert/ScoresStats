@@ -121,8 +121,6 @@ console.log("🚀 ~ file: getH2HStats.js:131 ~ getH2HStats ~ getH2HStats:")
       // }
     }
     browser.close();
-    // message = { subject: "Progress", message: "file: getH2HStats.js" };
-    // mail(message);
     return (gamesList = await getTeamDiff(gamesList));
   } catch (error) {
     message = { subject: "file: getH2HStats.js", message: error.message };

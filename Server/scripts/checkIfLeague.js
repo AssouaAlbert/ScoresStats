@@ -1,9 +1,10 @@
 const puppeteer = require("puppeteer");
 const getGamesData = require("./getGamesData");
 const mail = require("./sendEmail");
-const time = 30 * 60 * 1000;
+const time = 1 * 60 * 1000;
 
-const checkIfLeague = async (gamesList) => {
+const checkIfLeague = async (gamesList, start = 0) => {
+  console.log("🚀 ~ file: checkIfLeague.js:7 ~ checkIfLeague ~ start:", start)
   console.log(
     "🚀 ~ file: checkIfLeague.js:87 ~ checkIfLeague ~ checkIfLeague:"
   );
@@ -29,15 +30,12 @@ const checkIfLeague = async (gamesList) => {
     });
     const gamesListArray = Object.entries(gamesList);
     let ceil = Math.floor(gamesListArray.length / 50) + 1;
-    for (let index = 0; index < ceil * 50; index += 50) {
-      for (let i = index; i < index + 10; i++) {
+    for (let index = start; index < ceil * 50; index += 50) {
+      for (let i = index; i < index + 50; i++) {
         if (!gamesListArray[i]) break;
-
+        start = i;
+        console.log("🚀 ~ file: checkIfLeague.js:36 ~ checkIfLeague ~ i:", i)
         const [key, value] = gamesListArray[i];
-        console.log(
-          "🚀 ~ file: checkIfLeague.js:34 ~ checkIfLeague ~ `${value.link}`:",
-          value.link
-        );
         await page.goto(`${value.link}`, {
           waitUntil: "domcontentloaded",
         });
@@ -85,15 +83,12 @@ const checkIfLeague = async (gamesList) => {
         gamesList[key] = results;
       }
     }
-
-    // message = { subject: "Progress", message: "file: checkIfLeague.js" };
-    // mail(message);
     browser.close();
     return (gamesList = await getGamesData(gamesList));
   } catch (error) {
     message = { subject: "file: checkIfLeague.js", message: error.message };
     mail(message);
-    setTimeout(() => checkIfLeague(gamesList), time);
+    setTimeout(() => checkIfLeague(gamesList, start), time);
   }
 };
 

@@ -37,8 +37,6 @@ const getTeamDiff = (gamesList) => {
         };
       }
     }
-    // message = { subject: "Progess", message: "file: getTeamDiff.js" };
-    // mail(message);
     return gamesList;
   };
   module.exports = getTeamDiff;

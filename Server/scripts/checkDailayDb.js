@@ -11,6 +11,8 @@ const date = require("./getDate");
 const fileName = `_${date}`;
 const filePath = path.resolve(__dirname, `../data/${fileName}.json`);
 const time = 30 * 60 * 1000;
+let start = 0;
+let  gamesList = {};
 
 const checkDailayDb = async () => {
 console.log("🚀 ~ file: checkDailayDb.js:74 ~ checkDailayDb ~ checkDailayDb:")
@@ -51,7 +53,7 @@ console.log("🚀 ~ file: checkDailayDb.js:74 ~ checkDailayDb ~ checkDailayDb:")
         };
         mail(message, fileName);
       } catch (error) {
-        const gamesList = await getGamesList();
+        gamesList = await getGamesList(gamesList, start);
         const data = Object.values(gamesList);
         await insertToDB(data);
         await fs.writeFile(filePath, `${JSON.stringify(gamesList)}`, (err) => {
@@ -69,7 +71,9 @@ console.log("🚀 ~ file: checkDailayDb.js:74 ~ checkDailayDb ~ checkDailayDb:")
   } catch (error) {
     message = { subject: "file: checkDailayDb.js", message: error.message };
     mail(message);
-    // setTimeout(checkDailayDb, time);
+    setTimeout(async () => {
+      gamesList = await checkIfLeague(gamesList, start)
+    }, time);
   }
 };
 

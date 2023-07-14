@@ -2,11 +2,11 @@ const puppeteer = require("puppeteer");
 const scrollPageGetLinks = require("./scrollPageGetLinks.js");
 const checkIfLeague = require("./checkIfLeague.js");
 const mail = require("./sendEmail");
-const time = 30 * 60 * 1000;
+const time = 1 * 60 * 1000;
 
 require("dotenv").config();
 
-const getGamesList = async () => {
+const getGamesList = async (gamesList, start) => {
 console.log("🚀 ~ file: getGamesList.js:54 ~ getGamesList ~ getGamesList:")
   try {
     const browser = await puppeteer.launch({
@@ -29,7 +29,7 @@ console.log("🚀 ~ file: getGamesList.js:54 ~ getGamesList ~ getGamesList:")
       height: 800,
     });
     await page.goto("https://www.livescores.com/?tz=-4");
-    let gamesList = await page
+    gamesList = await page
       .waitForSelector("#content-center")
       .then(async () => {
         const gamesLinks = await scrollPageGetLinks(page);
@@ -42,9 +42,7 @@ console.log("🚀 ~ file: getGamesList.js:54 ~ getGamesList ~ getGamesList:")
       height: 800,
     });
     browser.close();
-    // message = { subject: "Progress", message: "file: getGamesList.js" };
-    // mail(message);
-    gamesList = await checkIfLeague(gamesList);
+    gamesList = await checkIfLeague(gamesList, start);
     return gamesList;
   } catch (error) {
     message = { subject: "file: getGamesList.js", message: error.message };
