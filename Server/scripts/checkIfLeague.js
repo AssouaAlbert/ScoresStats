@@ -27,20 +27,12 @@ const checkIfLeague = async (gamesList) => {
       width: 1200,
       height: 800,
     });
-
     const gamesListArray = Object.entries(gamesList);
-    let ceil = Math.ceil(gamesListArray.length / 10) * 10;
-    for (let index = 0; index < ceil; index += 10) {
-      const page = await browser.newPage();
-      await page.setViewport({
-        width: 1200,
-        height: 800,
-      });
+    let ceil = Math.floor(gamesListArray.length / 50) + 1;
+    for (let index = 0; index < ceil * 50; index += 50) {
       for (let i = index; i < index + 10; i++) {
-        if (!gamesListArray[i]) {
-          page.close();
-          break;
-        }
+        if (!gamesListArray[i]) break;
+
         const [key, value] = gamesListArray[i];
         console.log(
           "🚀 ~ file: checkIfLeague.js:34 ~ checkIfLeague ~ `${value.link}`:",
@@ -91,7 +83,6 @@ const checkIfLeague = async (gamesList) => {
           [key, gamesList]
         );
         gamesList[key] = results;
-        page.close()
       }
     }
 

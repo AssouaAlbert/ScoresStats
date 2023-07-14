@@ -69,7 +69,7 @@ console.log("🚀 ~ file: checkDailayDb.js:74 ~ checkDailayDb ~ checkDailayDb:")
   } catch (error) {
     message = { subject: "file: checkDailayDb.js", message: error.message };
     mail(message);
-    setTimeout(checkDailayDb, time);
+    // setTimeout(checkDailayDb, time);
   }
 };
 
