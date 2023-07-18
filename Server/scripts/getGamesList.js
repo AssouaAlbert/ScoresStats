@@ -4,10 +4,12 @@ const checkIfLeague = require("./checkIfLeague.js");
 const mail = require("./sendEmail");
 const time = 1 * 60 * 1000;
 
+/* ---------------------------------- Store --------------------------------- */
+const store = require("../store/store.js");
+
 require("dotenv").config();
 
 const getGamesList = async (gamesList, start) => {
-console.log("🚀 ~ file: getGamesList.js:54 ~ getGamesList ~ getGamesList:")
   try {
     const browser = await puppeteer.launch({
       headless: true,
@@ -29,12 +31,10 @@ console.log("🚀 ~ file: getGamesList.js:54 ~ getGamesList ~ getGamesList:")
       height: 800,
     });
     await page.goto("https://www.livescores.com/?tz=-4");
-    gamesList = await page
-      .waitForSelector("#content-center")
-      .then(async () => {
-        const gamesLinks = await scrollPageGetLinks(page);
-        return gamesLinks;
-      });
+    gamesList = await page.waitForSelector("#content-center").then(async () => {
+      const gamesLinks = await scrollPageGetLinks(page);
+      return gamesLinks;
+    });
     page.close();
     newPage = await browser.newPage();
     await newPage.setViewport({
@@ -45,9 +45,10 @@ console.log("🚀 ~ file: getGamesList.js:54 ~ getGamesList ~ getGamesList:")
     gamesList = await checkIfLeague(gamesList, start);
     return gamesList;
   } catch (error) {
+    store.dispatch(setError());
+    store.dispatch(setError());
     message = { subject: "file: getGamesList.js", message: error.message };
     mail(message);
-    setTimeout(getGamesList, time);
   }
 };
 

@@ -5,17 +5,20 @@ const mongoose = require("mongoose");
 const getGamesList = require("./getGamesList");
 const insertToDB = require("./db/insertData");
 const mail = require("./sendEmail");
-const deleteOldFiles = require("./deleteOldFiles")
+const deleteOldFiles = require("./deleteOldFiles");
 
 const date = require("./getDate");
 const fileName = `_${date}`;
 const filePath = path.resolve(__dirname, `../data/${fileName}.json`);
-const time =  * 60 * 1000;
+const time = 26 * 60 * 1000;
 let start = 0;
-let  gamesList = {};
+let gamesList = {};
+
+/* ---------------------------------- Store --------------------------------- */
+const { store } = require("../store/store");
+const { setError } = require("../store/globalSlice.js");
 
 const checkDailayDb = async () => {
-console.log("🚀 ~ file: checkDailayDb.js:74 ~ checkDailayDb ~ checkDailayDb:")
   deleteOldFiles();
   try {
     const db = await mongoose.connection.db;
@@ -69,10 +72,11 @@ console.log("🚀 ~ file: checkDailayDb.js:74 ~ checkDailayDb ~ checkDailayDb:")
       }
     }
   } catch (error) {
+    store.dispatch(setError());
     message = { subject: "file: checkDailayDb.js", message: error.message };
     mail(message);
     setTimeout(async () => {
-      gamesList = await checkIfLeague(gamesList, start)
+      gamesList = await checkIfLeague(gamesList, start);
     }, time);
   }
 };

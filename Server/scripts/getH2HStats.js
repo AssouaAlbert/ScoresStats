@@ -2,9 +2,11 @@ const puppeteer = require("puppeteer");
 const getTeamDiff = require("./getTeamDiff");
 const mail = require("./sendEmail");
 const time = 30 * 60 * 1000;
-const getH2HStats = async (gamesList) => {
-console.log("🚀 ~ file: getH2HStats.js:131 ~ getH2HStats ~ getH2HStats:")
 
+/* ---------------------------------- Store --------------------------------- */
+const store = require("../store/store.js");
+
+const getH2HStats = async (gamesList) => {
   try {
     const browser = await puppeteer.launch({
       headless: true,
@@ -123,6 +125,7 @@ console.log("🚀 ~ file: getH2HStats.js:131 ~ getH2HStats ~ getH2HStats:")
     browser.close();
     return (gamesList = await getTeamDiff(gamesList));
   } catch (error) {
+    store.dispatch(setError());
     message = { subject: "file: getH2HStats.js", message: error.message };
     mail(message);
     setTimeout(() => getH2HStats(gamesList), time);

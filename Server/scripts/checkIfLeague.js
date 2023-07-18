@@ -3,8 +3,11 @@ const getGamesData = require("./getGamesData");
 const mail = require("./sendEmail");
 const time = 1 * 60 * 1000;
 
+/* ---------------------------------- Store --------------------------------- */
+const store = require("../store/store.js");
+
 const checkIfLeague = async (gamesList, start = 0) => {
-  console.log("🚀 ~ file: checkIfLeague.js:7 ~ checkIfLeague ~ start:", start)
+  console.log("🚀 ~ file: checkIfLeague.js:7 ~ checkIfLeague ~ start:", start);
   console.log(
     "🚀 ~ file: checkIfLeague.js:87 ~ checkIfLeague ~ checkIfLeague:"
   );
@@ -34,7 +37,7 @@ const checkIfLeague = async (gamesList, start = 0) => {
       for (let i = index; i < index + 50; i++) {
         if (!gamesListArray[i]) break;
         start = i;
-        console.log("🚀 ~ file: checkIfLeague.js:36 ~ checkIfLeague ~ i:", i)
+        console.log("🚀 ~ file: checkIfLeague.js:36 ~ checkIfLeague ~ i:", i);
         const [key, value] = gamesListArray[i];
         await page.goto(`${value.link}`, {
           waitUntil: "domcontentloaded",
@@ -86,6 +89,7 @@ const checkIfLeague = async (gamesList, start = 0) => {
     browser.close();
     return (gamesList = await getGamesData(gamesList));
   } catch (error) {
+    store.dispatch(setError());
     message = { subject: "file: checkIfLeague.js", message: error.message };
     mail(message);
     // setTimeout(() => checkIfLeague(gamesList, start), time);

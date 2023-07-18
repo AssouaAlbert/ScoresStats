@@ -2,9 +2,11 @@ const puppeteer = require("puppeteer");
 const getH2HStats = require("./getH2HStats");
 const mail = require("./sendEmail");
 const time = 30 * 60 * 1000;
-const getGamesData = async (gamesList) => {
-console.log("🚀 ~ file: getGamesData.js:161 ~ getGamesData ~ getGamesData:")
 
+/* ---------------------------------- Store --------------------------------- */
+const store = require("../store/store.js");
+
+const getGamesData = async (gamesList) => {
   try {
     const browser = await puppeteer.launch({
       headless: true,
@@ -153,6 +155,7 @@ console.log("🚀 ~ file: getGamesData.js:161 ~ getGamesData ~ getGamesData:")
     // Calculate Differences in games
     return (gamesList = await getH2HStats(gamesList));
   } catch (error) {
+    store.dispatch(setError());
     message = { subject: "file: getGamesData.js", message: error.message };
     mail(message);
     setTimeout(() => getGamesData(gamesList), time);

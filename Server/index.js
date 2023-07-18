@@ -25,15 +25,13 @@ app.use(morgan("common"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
+    /* --------------------------- Subscribe To Store --------------------------- */
+const { unsubscribe } = require("./store/store");
 
 /* MONGOOSE SETUP */
 const PORT = process.env.PORT || 9000;
-/* SCRAPPING TIME*/
-// const time = 12 * 60 * 60 * 1000;
-
 /* CONNNECT TO DATABASE */
 app.use("/", router);
-
 /* CONNNECT TO DATABASE */
 mongoose
   .connect(process.env.MONGO_DB, {
@@ -43,14 +41,13 @@ mongoose
   .then(async () => {
     /* START SERVER*/
     app.listen(PORT, () => console.log("Server is running on port %d", PORT));
-    // checkDailayDb();
-    // setInterval(checkDailayDb, time);
     await checkDailayDb();
     cron.schedule("00 00 * * *", async () => {
       await checkDailayDb();
     });
   })
   .catch((error) => {
+    unsubscribe();
     message = { subject: "file: index.js:49", message: error.message };
     mail(message);
   });
