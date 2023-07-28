@@ -1,18 +1,18 @@
 const puppeteer = require("puppeteer");
 const scrollPageGetLinks = require("./scrollPageGetLinks.js");
-const checkIfLeague = require("./checkIfLeague.js");
-const mail = require("./sendEmail");
-const time = 1 * 60 * 1000;
 
 /* ---------------------------------- Store --------------------------------- */
-const store = require("../store/store.js");
+const { store } = require("../store/store");
+const { setError, setPayload, setErrorFunction, setLastFunctionCall, setProcessComplete, setBusy } = require("../store/globalSlice.js");
 
 require("dotenv").config();
-
-const getGamesList = async (gamesList, start) => {
+const getGamesList = async (gamesList) => {
+  console.log("🚀 ~ file: getGamesList.js:10 ~ getGamesList ~ getGamesList:", getGamesList.name)
+  store.dispatch(setBusy());
+  store.dispatch(setLastFunctionCall(getGamesList.name));
   try {
     const browser = await puppeteer.launch({
-      headless: true,
+      headless: false,
       dumpio: false,
       args: [
         "--no-sandbox",
@@ -36,19 +36,14 @@ const getGamesList = async (gamesList, start) => {
       return gamesLinks;
     });
     page.close();
-    newPage = await browser.newPage();
-    await newPage.setViewport({
-      width: 1200,
-      height: 800,
-    });
     browser.close();
-    gamesList = await checkIfLeague(gamesList, start);
-    return gamesList;
+    store.dispatch(setPayload(gamesList));
+    store.dispatch(setProcessComplete([getGamesList.name, true]));
+    store.dispatch(setBusy());
   } catch (error) {
-    store.dispatch(setError());
-    store.dispatch(setError());
-    message = { subject: "file: getGamesList.js", message: error.message };
-    mail(message);
+    store.dispatch(setProcessComplete([getGamesList.name, false]));
+    store.dispatch(setBusy(false));
+    store.dispatch(setError({ subject: "Error - file: getGamesList.js", message: error.message }));
   }
 };
 

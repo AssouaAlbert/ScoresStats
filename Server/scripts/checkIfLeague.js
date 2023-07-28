@@ -1,19 +1,24 @@
 const puppeteer = require("puppeteer");
 const getGamesData = require("./getGamesData");
-const mail = require("./sendEmail");
-const time = 1 * 60 * 1000;
 
 /* ---------------------------------- Store --------------------------------- */
-const store = require("../store/store.js");
+const {
+  setError,
+  setPayload,
+  setErrorFunction,
+  setLastFunctionCall,
+  setBusy,
+  setProcessComplete,
+} = require("../store/globalSlice.js");
 
-const checkIfLeague = async (gamesList, start = 0) => {
-  console.log("🚀 ~ file: checkIfLeague.js:7 ~ checkIfLeague ~ start:", start);
-  console.log(
-    "🚀 ~ file: checkIfLeague.js:87 ~ checkIfLeague ~ checkIfLeague:"
-  );
+const checkIfLeague = async (gamesList, store) => {
+  console.log("🚀 ~ file: checkIfLeague.js:15 ~ checkIfLeague ~ checkIfLeague:", checkIfLeague.name)
+  store.dispatch(setBusy());
+  store.dispatch(setLastFunctionCall(checkIfLeague.name));
+  const data = {};
   try {
     const browser = await puppeteer.launch({
-      headless: true,
+      headless: false,
       dumpio: false,
       args: [
         "--no-sandbox",
@@ -32,12 +37,11 @@ const checkIfLeague = async (gamesList, start = 0) => {
       height: 800,
     });
     const gamesListArray = Object.entries(gamesList);
+    // throw new Error("None")
     let ceil = Math.floor(gamesListArray.length / 50) + 1;
-    for (let index = start; index < ceil * 50; index += 50) {
+    for (let index = 0; index < ceil * 50; index += 50) {
       for (let i = index; i < index + 50; i++) {
         if (!gamesListArray[i]) break;
-        start = i;
-        console.log("🚀 ~ file: checkIfLeague.js:36 ~ checkIfLeague ~ i:", i);
         const [key, value] = gamesListArray[i];
         await page.goto(`${value.link}`, {
           waitUntil: "domcontentloaded",
@@ -83,16 +87,24 @@ const checkIfLeague = async (gamesList, start = 0) => {
           },
           [key, gamesList]
         );
-        gamesList[key] = results;
+        data[key] = { ...results };
       }
     }
+    page.close();
     browser.close();
-    return (gamesList = await getGamesData(gamesList));
+    store.dispatch(setPayload(data));
+    store.dispatch(setProcessComplete([checkIfLeague.name, true]));
+    store.dispatch(setBusy());
   } catch (error) {
-    store.dispatch(setError());
-    message = { subject: "file: checkIfLeague.js", message: error.message };
-    mail(message);
-    // setTimeout(() => checkIfLeague(gamesList, start), time);
+    console.log(
+      "🚀 ~ file: checkIfLeague.js:91 ~ checkIfLeague ~ error:",
+      error.message
+    );
+    store.dispatch(setProcessComplete([checkIfLeague.name, false]));
+    store.dispatch(setBusy(false));
+    store.dispatch(
+      setError({ subject: "file: checkIfLeague.js", message: error.message })
+    );
   }
 };
 

@@ -10,7 +10,6 @@ const cron = require("node-cron");
 
 /* SCRIPTS */
 const checkDailayDb = require("./scripts/checkDailayDb");
-const mail = require("./scripts/sendEmail");
 const router = require("./routes/index");
 /* ERROR */
 const filename = "example.txt";
@@ -25,8 +24,9 @@ app.use(morgan("common"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors());
-    /* --------------------------- Subscribe To Store --------------------------- */
-const { unsubscribe } = require("./store/store");
+/* --------------------------- Subscribe To Store --------------------------- */
+const { store, unsubscribe } = require("./store/store");
+const { setError } = require("./store/globalSlice");
 
 /* MONGOOSE SETUP */
 const PORT = process.env.PORT || 9000;
@@ -38,16 +38,17 @@ mongoose
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(async () => {
+  .then(() => {
     /* START SERVER*/
     app.listen(PORT, () => console.log("Server is running on port %d", PORT));
-    await checkDailayDb();
-    cron.schedule("00 00 * * *", async () => {
-      await checkDailayDb();
+    checkDailayDb(store.getState().globalState.payload, store);
+    cron.schedule("37 06 * * *", async () => {
+      checkDailayDb(store.getState().globalState.payload,store);
     });
   })
   .catch((error) => {
+    store.dispatch(
+      setError({ subject: "file: index.js:49", message: error.message })
+    );
     unsubscribe();
-    message = { subject: "file: index.js:49", message: error.message };
-    mail(message);
   });

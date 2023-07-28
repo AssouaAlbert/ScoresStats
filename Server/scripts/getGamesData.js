@@ -1,15 +1,18 @@
 const puppeteer = require("puppeteer");
 const getH2HStats = require("./getH2HStats");
-const mail = require("./sendEmail");
 const time = 30 * 60 * 1000;
 
 /* ---------------------------------- Store --------------------------------- */
-const store = require("../store/store.js");
+const { setError, setPayload, setErrorFunction, setLastFunctionCall, setBusy, setProcessComplete } = require("../store/globalSlice.js");
 
-const getGamesData = async (gamesList) => {
+const getGamesData = async (gamesList, store) => {
+  console.log("🚀 ~ file: getGamesData.js:176 ~ getGamesData ~ getGamesData:", getGamesData.name)
+  store.dispatch(setBusy());
+  store.dispatch(setLastFunctionCall(getGamesData.name));
+  const data = {};
   try {
     const browser = await puppeteer.launch({
-      headless: true,
+      headless: false,
       dumpio: false,
       args: [
         "--no-sandbox",
@@ -28,7 +31,10 @@ const getGamesData = async (gamesList) => {
       height: 800,
     });
     const gamesListArray = Object.entries(gamesList);
-    for (let i = 0; i < gamesListArray.length; i++) {
+    let ceil = Math.floor(gamesListArray.length / 50) + 1;
+    for (let index = 0; index < (ceil * 50); index += 50) {
+      for (let i = index; i < index + 50; i++) {
+      if (!gamesListArray[i]) break;
       const [key, value] = gamesListArray[i];
       if (value.league) {
         await page.goto(`${value.link}/table`, {
@@ -148,17 +154,22 @@ const getGamesData = async (gamesList) => {
           },
           [key, gamesList]
         );
-        gamesList[key] = results;
+        data[key] = { ...results };
       }
     }
+  }
+    page.close();
     browser.close();
-    // Calculate Differences in games
-    return (gamesList = await getH2HStats(gamesList));
+    store.dispatch(setPayload(data));
+    store.dispatch(setProcessComplete([getGamesData.name, true]));
+    store.dispatch(setBusy());
   } catch (error) {
-    store.dispatch(setError());
-    message = { subject: "file: getGamesData.js", message: error.message };
-    mail(message);
-    setTimeout(() => getGamesData(gamesList), time);
+    console.log("🚀 ~ file: getGamesData.js:168 ~ getGamesData ~ error:", error.message)
+    store.dispatch(setProcessComplete([getGamesData.name, false]));
+    store.dispatch(setBusy(false));
+    store.dispatch(
+      setError({ subject: "file: getGamesData.js", message: error.message })
+    );
   }
 };
 module.exports = getGamesData;
