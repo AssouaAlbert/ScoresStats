@@ -31,7 +31,6 @@ const columns = [
       const h2h = params.row?.h2h;
       let scores = 0;
       h2h.forEach((game) => {
-        // const h2hGame = Object.entries(element);
         scores += game["home"]["homeScore"] + game["away"]["awayScore"];
       });
       return `${"" + Number.parseFloat(scores / h2h.length).toFixed(2)}`;
