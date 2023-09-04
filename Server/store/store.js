@@ -72,7 +72,6 @@ const unsubscribe = store.subscribe(() => {
     utils.insertToDB(store.getState().globalState.payload, store);
   } else if (store.getState().globalState.error) {
     setTimeout(() => {
-      console.log("🚀 ~ file: store.js:78 ~ setTimeout ~ store.getState().globalState.lastFunctionCall:", store.getState().globalState.lastFunctionCall)
       store.dispatch(setError());
       utils[store.getState().globalState.lastFunctionCall](
         store.getState().globalState.payload,

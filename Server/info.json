@@ -1,1 +1,13 @@
-{"error":false,"busy":false,"payload":{},"lastFunctionCall":"","errorFunction":"","interval":90000,"getGamesList":false,"checkIfLeague":false,"getGamesData":false,"getH2HStats":false,"insertToDB":false}
+{
+  "error": false,
+  "busy": false,
+  "payload": {},
+  "lastFunctionCall": "",
+  "errorFunction": "",
+  "interval": 90000,
+  "getGamesList": false,
+  "checkIfLeague": false,
+  "getGamesData": false,
+  "getH2HStats": false,
+  "insertToDB": false
+}
