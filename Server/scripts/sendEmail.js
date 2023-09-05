@@ -2,7 +2,6 @@ const nodemailer = require("nodemailer");
 const dotenv = require("dotenv");
 
 async function mail(message, fileName = "") {
-  console.log("🚀 ~ file: sendEmail.js:5 ~ mail ~ message:", message)
   dotenv.config();
   try{
     let transporter = nodemailer.createTransport({
